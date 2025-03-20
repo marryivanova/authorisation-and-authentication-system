@@ -2,8 +2,8 @@
 1. https://habr.com/ru/articles/829742/
 
 запуск:
-1. pip install -r requirements.txt
-2. uvicorn app.main:app --reload
+- pip install -r requirements.txt
+- uvicorn src.app.main:app --reload
 
 Задание:
 1. Как избежать утечек токена?
@@ -26,7 +26,7 @@ JWT позволяет подписывать токены, что делает 
 
 д) Защиту от атак Brute Force и XSS, Clickjacking.
 
-е) Заголовки безопасности.
+е) Настройка в nginx.
 
 
 Запуск:
