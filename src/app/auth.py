@@ -1,19 +1,14 @@
-from decouple import config
-from app.config import settings
-from app.schemas import TokenData
-from app.redis_client import redis_config
-from passlib.context import CryptContext
-
+from typing import Optional
 from jose import JWTError, jwt
+
+from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
 
-
-SECRET_KEY = config("SECRET_KEY")
-ALGORITHM = config("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(config("ACCESS_TOKEN_EXPIRE_MINUTES"))
-
+from src.app.config import settings
+from src.app.schemas import TokenData
+from src.app.redis_client import redis_config
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -27,14 +22,26 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_token(data: dict) -> str:
+def create_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(
-        minutes=settings.access_token_expire_minutes
+    expire = datetime.now(timezone.utc) + (
+        expires_delta or timedelta(minutes=settings.auth.access_token_expire_minutes)
     )
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
-        to_encode, settings.secret_key, algorithm=settings.algorithm
+        to_encode, settings.auth.secret_key, algorithm=settings.auth.algorithm
+    )
+    return encoded_jwt
+
+
+def create_refresh_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + (
+        expires_delta or timedelta(days=settings.auth.refresh_token_expire_days)
+    )
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(
+        to_encode, settings.auth.secret_key, algorithm=settings.auth.algorithm
     )
     return encoded_jwt
 
@@ -47,17 +54,21 @@ def verify_token(token: str) -> TokenData:
     )
     try:
         payload = jwt.decode(
-            token, settings.secret_key, algorithms=[settings.algorithm]
+            token, settings.auth.secret_key, algorithms=[settings.auth.algorithm]
         )
-        username = payload.get("sub")
-        role = payload.get("role")
+        username: str = payload.get("sub")
+        role: str = payload.get("role")
         if username is None or role is None:
+            raise credentials_exception
+        if role not in ["admin", "user"]:
             raise credentials_exception
         token_data = TokenData(username=username, role=role)
     except JWTError:
         raise credentials_exception
+
     if redis_config.get(f"blacklist:{token}"):
         raise credentials_exception
+
     return token_data
 
 

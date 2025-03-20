@@ -1,13 +1,12 @@
 import os
+from fastapi import FastAPI, Request
+from starlette.templating import Jinja2Templates
 
-from fastapi import FastAPI
+from src.app.routes import auth, users
 from starlette.staticfiles import StaticFiles
-
 from fastapi.middleware.cors import CORSMiddleware
 
-from fastapi import FastAPI
-from app.routes import auth, users
-
+from src.app.routes.users import templates
 
 title = "Test task"
 description = f"""
@@ -60,7 +59,11 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(users.router)
 
+templates = Jinja2Templates(directory="src/frontend")
+frontend_dir = os.path.join(os.path.dirname(__file__), "../frontend")
+app.mount("/frontend", StaticFiles(directory=frontend_dir))
+
 
 @app.get("/")
-def read_root():
-    return {"message": "Welcome to the FastAPI User Management System!"}
+def read_root(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})

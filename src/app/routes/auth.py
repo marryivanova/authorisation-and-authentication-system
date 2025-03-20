@@ -1,13 +1,12 @@
-import typing as t
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from app.auth import (
+from src.app.auth import (
     create_token,
     oauth2_scheme,
 )
-from app.config import settings
-from app.schemas import TokenData
-from app.redis_client import redis_config
+from src.app.config import settings
+from src.app.schemas import TokenData
+from src.app.redis_client import redis_config
 
 router = APIRouter()
 
@@ -21,6 +20,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 @router.post("/logout")
 async def logout(token: str = Depends(oauth2_scheme)):
     redis_config.set(
-        f"blacklist:{token}", "true", ex=settings.access_token_expire_minutes * 60
+        f"blacklist:{token}", "true", ex=settings.auth.access_token_expire_minutes * 60
     )
     return {"message": "Successfully logged out"}
