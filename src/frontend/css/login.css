@@ -94,6 +94,7 @@ button:hover {
     margin-top: 20px;
 }
 
+/* Popup (Modal) styles */
 .modal {
     display: none;
     position: fixed;

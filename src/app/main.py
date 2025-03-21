@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI, Request
 from starlette.templating import Jinja2Templates
 
-from src.app.routes import auth, users
+from src.app.routes import auth_controller, users
 from starlette.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -45,7 +45,7 @@ app = FastAPI(
 
 origins = ["*"]
 
-app.include_router(auth.router)
+app.include_router(auth_controller.router)
 app.include_router(users.router)
 
 app.add_middleware(
@@ -56,7 +56,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router)
+app.include_router(auth_controller.router)
 app.include_router(users.router)
 
 templates = Jinja2Templates(directory="src/frontend")

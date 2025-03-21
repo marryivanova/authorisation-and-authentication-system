@@ -1,4 +1,11 @@
+from pathlib import Path
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
+
+
+project_root = Path(__file__).resolve().parents[2]
+dotenv_path = project_root / ".env"
+load_dotenv(dotenv_path=dotenv_path)
 
 
 class DatabaseSettings(BaseSettings):
@@ -39,7 +46,9 @@ class Settings(BaseSettings):
     redis: RedisSettings
 
     class Config:
-        env_file = ".env"
+        env_file = dotenv_path
+        env_file_encoding = "utf-8"
+        env_nested_delimiter = "__"
 
 
 settings = Settings()

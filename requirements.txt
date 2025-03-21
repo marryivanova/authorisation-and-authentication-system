@@ -15,6 +15,6 @@ passlib[bcrypt]
 Jinja2==3.1.2
 asyncpg
 uvicorn
-starlette
-passlib
-jose
+httpx
+alembic
+psycopg2-binary
