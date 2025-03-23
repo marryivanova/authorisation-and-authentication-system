@@ -79,20 +79,20 @@ CREATE TABLE users (
 или миграция -  ` alembic upgrade head` 
 
 Пример работы:
-1. Создание пользователя.
+1. Создание пользователя:
 
 <figure>
   <img src="docs_file/db_user.png">
   <figcaption>DataBase</figcaption>
 </figure>
 
-2. Входим под его логин и паролем.
+2. Входим его логин и пароль:
 
 <figure>
   <img src="docs_file/use_api.png">
 </figure>
 
-3. Результат
+3. Результат:
 
 <figure>
   <img src="docs_file/result.png">
@@ -100,7 +100,7 @@ CREATE TABLE users (
 
 Еще один полный тест:
 
-1. Создаем юзере через API:
+1. Создаем юзера через API:
 <figure>
   <img src="docs_file/create_user.png">
 </figure>
@@ -111,7 +111,7 @@ CREATE TABLE users (
   <img src="docs_file/result_create_user.png">
 </figure>
 
-3. Проверим метод с токеном:  Введем логин + пароль - должен найти в БД 
+3. Проверим метод с токеном:  Введем логин + пароль - должен найти в БД ->
 Если есть - то, отдает токен, если нет ошибку.
 
 <figure>
