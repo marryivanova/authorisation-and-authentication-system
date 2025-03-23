@@ -1,0 +1,17 @@
+# Database
+DATABASE__HOSTNAME=env_example
+DATABASE__PORT=env_example
+DATABASE__NAME=env_example
+DATABASE__USERNAME=env_example
+DATABASE__PASSWORD=env_example
+
+# Auth
+AUTH__SECRET_KEY=env_example
+AUTH__ALGORITHM=env_example
+AUTH__ACCESS_TOKEN_EXPIRE_MINUTES=env_example
+
+# Redis
+REDIS__HOST=env_example
+REDIS__PORT=env_example
+REDIS__DB=env_example
+REDIS__PASSWORD=env_example
