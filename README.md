@@ -66,7 +66,7 @@
 - https://habr.com/ru/articles/829742/
 
 Таблица вида:
-` 
+```shell script
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR UNIQUE NOT NULL,
@@ -75,9 +75,8 @@ CREATE TABLE users (
     is_active BOOLEAN DEFAULT TRUE,
     role VARCHAR DEFAULT 'user'
 );
-` 
+``` 
 или миграция -  ` alembic upgrade head` 
-
 
 Пример работы:
 1. Создание пользователя.
